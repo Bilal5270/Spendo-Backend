@@ -5,15 +5,15 @@ namespace Spendo_Backend.Models;
 
 public partial class Transaction
 {
-    public int Transactionid { get; set; }
+    public int TransactionId { get; set; }
 
-    public int? Userid { get; set; }
+    public int? UserId { get; set; }
 
-    public int? Categoryid { get; set; }
+    public int? CategoryId { get; set; }
 
     public decimal Amount { get; set; }
 
-    public DateTime? Transactiondate { get; set; }
+    public DateTime? TransactionDate { get; set; }
 
     public string? Description { get; set; }
 

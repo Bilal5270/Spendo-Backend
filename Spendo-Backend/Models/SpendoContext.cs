@@ -31,43 +31,39 @@ public partial class SpendoContext : DbContext
     {
         modelBuilder.Entity<Budget>(entity =>
         {
-            entity.HasKey(e => e.Budgetid).HasName("budgets_pkey");
+            entity.HasKey(e => e.BudgetId).HasName("budgets_pkey");
 
             entity.ToTable("budgets");
 
-            entity.Property(e => e.Budgetid).HasColumnName("budgetid");
+            entity.Property(e => e.BudgetId).HasColumnName("budgetid");
             entity.Property(e => e.Amount)
                 .HasPrecision(10, 2)
                 .HasColumnName("amount");
-            entity.Property(e => e.Categoryid).HasColumnName("categoryid");
-            entity.Property(e => e.Enddate)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("enddate");
-            entity.Property(e => e.Startdate)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("startdate");
-            entity.Property(e => e.Userid).HasColumnName("userid");
+            entity.Property(e => e.CategoryId).HasColumnName("categoryid");
+            entity.Property(e => e.Month).HasColumnName("month");
+            entity.Property(e => e.UserId).HasColumnName("userid");
+            entity.Property(e => e.Year).HasColumnName("year");
 
             entity.HasOne(d => d.Category).WithMany(p => p.Budgets)
-                .HasForeignKey(d => d.Categoryid)
+                .HasForeignKey(d => d.CategoryId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("budgets_categoryid_fkey");
 
             entity.HasOne(d => d.User).WithMany(p => p.Budgets)
-                .HasForeignKey(d => d.Userid)
+                .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("budgets_userid_fkey");
         });
 
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.Categoryid).HasName("categories_pkey");
+            entity.HasKey(e => e.CategoryId).HasName("categories_pkey");
 
             entity.ToTable("categories");
 
             entity.HasIndex(e => e.Name, "categories_name_key").IsUnique();
 
-            entity.Property(e => e.Categoryid).HasColumnName("categoryid");
+            entity.Property(e => e.CategoryId).HasColumnName("categoryid");
             entity.Property(e => e.Description).HasColumnName("description");
             entity.Property(e => e.Name)
                 .HasMaxLength(100)
@@ -76,46 +72,46 @@ public partial class SpendoContext : DbContext
 
         modelBuilder.Entity<Transaction>(entity =>
         {
-            entity.HasKey(e => e.Transactionid).HasName("transactions_pkey");
+            entity.HasKey(e => e.TransactionId).HasName("transactions_pkey");
 
             entity.ToTable("transactions");
 
-            entity.Property(e => e.Transactionid).HasColumnName("transactionid");
+            entity.Property(e => e.TransactionId).HasColumnName("transactionid");
             entity.Property(e => e.Amount)
                 .HasPrecision(10, 2)
                 .HasColumnName("amount");
-            entity.Property(e => e.Categoryid).HasColumnName("categoryid");
+            entity.Property(e => e.CategoryId).HasColumnName("categoryid");
             entity.Property(e => e.Description).HasColumnName("description");
-            entity.Property(e => e.Transactiondate)
+            entity.Property(e => e.TransactionDate)
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("transactiondate");
             entity.Property(e => e.Type)
                 .HasMaxLength(50)
                 .HasColumnName("type");
-            entity.Property(e => e.Userid).HasColumnName("userid");
+            entity.Property(e => e.UserId).HasColumnName("userid");
 
             entity.HasOne(d => d.Category).WithMany(p => p.Transactions)
-                .HasForeignKey(d => d.Categoryid)
+                .HasForeignKey(d => d.CategoryId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("transactions_categoryid_fkey");
 
             entity.HasOne(d => d.User).WithMany(p => p.Transactions)
-                .HasForeignKey(d => d.Userid)
+                .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("transactions_userid_fkey");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Userid).HasName("users_pkey");
+            entity.HasKey(e => e.UserId).HasName("users_pkey");
 
             entity.ToTable("users");
 
             entity.HasIndex(e => e.Email, "users_email_key").IsUnique();
 
-            entity.Property(e => e.Userid).HasColumnName("userid");
-            entity.Property(e => e.Createdat)
+            entity.Property(e => e.UserId).HasColumnName("userid");
+            entity.Property(e => e.CreateDate)
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createdat");
@@ -125,7 +121,7 @@ public partial class SpendoContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(100)
                 .HasColumnName("name");
-            entity.Property(e => e.Passwordhash).HasColumnName("passwordhash");
+            entity.Property(e => e.PasswordHash).HasColumnName("passwordhash");
         });
 
         OnModelCreatingPartial(modelBuilder);

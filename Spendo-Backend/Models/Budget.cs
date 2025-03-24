@@ -5,17 +5,17 @@ namespace Spendo_Backend.Models;
 
 public partial class Budget
 {
-    public int Budgetid { get; set; }
+    public int BudgetId { get; set; }
 
-    public int? Userid { get; set; }
+    public int? UserId { get; set; }
 
-    public int? Categoryid { get; set; }
+    public int? CategoryId { get; set; }
 
     public decimal Amount { get; set; }
 
-    public DateTime Startdate { get; set; }
+    public int Year { get; set; }
 
-    public DateTime Enddate { get; set; }
+    public int Month { get; set; }
 
     public virtual Category? Category { get; set; }
 

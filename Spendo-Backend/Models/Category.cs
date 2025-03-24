@@ -5,7 +5,7 @@ namespace Spendo_Backend.Models;
 
 public partial class Category
 {
-    public int Categoryid { get; set; }
+    public int CategoryId { get; set; }
 
     public string Name { get; set; } = null!;
 
