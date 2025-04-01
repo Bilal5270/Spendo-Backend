@@ -14,6 +14,6 @@ RUN dotnet publish -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 WORKDIR /app
 COPY --from=build /app/publish .
-EXPOSE 8080
+EXPOSE 8523
 
 ENTRYPOINT ["dotnet", "Spendo-Backend.dll"]
