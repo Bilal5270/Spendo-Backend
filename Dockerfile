@@ -1,28 +1,19 @@
-# Bouwfase
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build-env
 
 WORKDIR /app
 
-# Kopieer csproj en herstel afhankelijkheden
-COPY Spendo-Backend/*.csproj ./
-RUN dotnet restore
+COPY . .
 
-# Kopieer alle bestanden en publiceer de app
-COPY Spendo-Backend/. ./
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet restore Spendo-Backend/Spendo-Backend.csproj
 
-# Basisimage voor de uitvoer
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+RUN dotnet publish Spendo-Backend/Spendo-Backend.csproj -c Release -o out
+
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
+
 WORKDIR /app
 
-# Kopieer de gepubliceerde bestanden vanuit de buildfase
-COPY --from=build /app/publish ./
+COPY --from=build-env /app/out .
 
-# Stel de omgeving in (optioneel, bijvoorbeeld voor Development)
-ENV ASPNETCORE_ENVIRONMENT Development
-
-# Exporteer poorten voor zowel HTTP als HTTPS
 EXPOSE 8080
 
-# Start de applicatie
 ENTRYPOINT ["dotnet", "Spendo-Backend.dll"]
