@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Spendo_Backend.Models;
+using Spendo_Backend.Repositories;
+using Spendo_Backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,8 +9,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<SpendoContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddControllers();
+builder.Services.AddScoped<ISpendoRepository, SpendoRepository>();
+builder.Services.AddScoped<IBudgetService, BudgetService>();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddCors();
+
 
 var app = builder.Build();
 
@@ -20,8 +26,15 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
+
+app.UseCors(builder =>
+    builder.AllowAnyOrigin()
+           .AllowAnyMethod()
+           .AllowAnyHeader()
+);
