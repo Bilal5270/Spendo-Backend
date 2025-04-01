@@ -1,12 +1,26 @@
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+# Dockerfile for the .NET backend (MisterPasta.Server)
+
+# Stage 1: Build the server
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build_server
 WORKDIR /app
 
-COPY Spendo-Backend/Spendo-Backend.csproj ./Spendo-Backend.csproj
-RUN dotnet restore Spendo-Backend.csproj
-RUN dotnet publish Spendo-Backend.csproj -c Release -o out
+# Copy the csproj file(s) and restore
+COPY *.csproj ./
+RUN dotnet restore
 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
+# Copy the rest of the files and build
+COPY . ./
+RUN dotnet publish -c Release -o /app
+
+# Stage 2: Run the server
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS server
 WORKDIR /app
-COPY --from=build /app/out ./
-EXPOSE 8523
+COPY --from=build_server /app .
+EXPOSE 5186
+
+# Set ASPNETCORE_URLS to tell the app to listen on port 5186
+ENV ASPNETCORE_URLS=http://+:5186
+ENV ASPNETCORE_HOSTINGSTARTUPASSEMBLIES=Microsoft.AspNetCore.SpaProxy
+ENV ASPNETCORE_ENVIRONMENT=Production
+
 ENTRYPOINT ["dotnet", "Spendo-Backend.dll"]
