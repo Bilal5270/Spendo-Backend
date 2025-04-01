@@ -29,13 +29,9 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-// app.UseHttpsRedirection();
 
-app.UseCors(builder =>
-    builder.AllowAnyOrigin()
-           .AllowAnyMethod()
-           .AllowAnyHeader()
-);
+app.UseCors(options => options.AllowAnyHeader().AllowAnyOrigin());
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
