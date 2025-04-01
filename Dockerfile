@@ -1,11 +1,9 @@
-# Dockerfile for the .NET backend (MisterPasta.Server)
-
 # Stage 1: Build the server
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build_server
 WORKDIR /app
 
 # Copy the csproj file(s) and restore
-COPY *.csproj ./
+COPY Spendo-Backend/*.csproj ./
 RUN dotnet restore
 
 # Copy the rest of the files and build
