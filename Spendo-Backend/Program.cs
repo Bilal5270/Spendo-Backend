@@ -5,6 +5,7 @@ using Spendo_Backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // Add services to the container.
 builder.Services.AddDbContext<SpendoContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -31,7 +32,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+app.Run("http://0.0.0.0:8080");
 
 app.UseCors(builder =>
     builder.AllowAnyOrigin()
