@@ -17,7 +17,7 @@ WORKDIR /app
 COPY --from=build /app/out ./
 
 # Expose port 8080
-EXPOSE 8080
+EXPOSE 8523
 
 # Start the application
 ENTRYPOINT ["dotnet", "Spendo-Backend.dll"]
