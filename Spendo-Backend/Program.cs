@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-    serverOptions.Listen(IPAddress.Parse("0.0.0.0"), 8523); 
+    serverOptions.Listen(IPAddress.Parse("0.0.0.0"), 5186); 
 });
 // Add services to the container.
 builder.Services.AddDbContext<SpendoContext>(options =>
