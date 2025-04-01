@@ -18,8 +18,6 @@ WORKDIR /app
 # Kopieer de gepubliceerde bestanden vanuit de buildfase
 COPY --from=build /app/publish ./
 
-# Stel de omgeving in (optioneel, bijvoorbeeld voor Development)
-ENV ASPNETCORE_ENVIRONMENT Development
 
 # Exporteer poorten voor zowel HTTP als HTTPS
 EXPOSE 8080
