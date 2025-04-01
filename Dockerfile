@@ -4,7 +4,7 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /app
 
 # Kopieer csproj en herstel afhankelijkheden
-COPY..
+COPY Spendo-Backend/*.csproj ./
 RUN dotnet restore  Spendo-Backend/*.csproj
 RUN dotnet publish Spendo-Backend/*.csproj -c Release -o out
 
