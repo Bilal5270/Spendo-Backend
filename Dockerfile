@@ -18,9 +18,4 @@ WORKDIR /app
 COPY --from=build_server /app .
 EXPOSE 5186
 
-# Set ASPNETCORE_URLS to tell the app to listen on port 5186
-ENV ASPNETCORE_URLS=http://+:5186
-ENV ASPNETCORE_HOSTINGSTARTUPASSEMBLIES=Microsoft.AspNetCore.SpaProxy
-ENV ASPNETCORE_ENVIRONMENT=Production
-
 ENTRYPOINT ["dotnet", "Spendo-Backend.dll"]
