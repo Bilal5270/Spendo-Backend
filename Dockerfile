@@ -14,4 +14,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 WORKDIR /app
 COPY --from=build /app/publish .
 
+EXPOSE 8000 
+
+
 ENTRYPOINT ["dotnet", "Spendo-Backend.dll"]
