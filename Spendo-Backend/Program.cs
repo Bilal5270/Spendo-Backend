@@ -30,10 +30,12 @@ if (app.Environment.IsDevelopment())
 app.UseCors(options => options.AllowAnyHeader().AllowAnyOrigin());
 
 // Remove HTTPS redirection since HTTPS termination is handled by Coolify.
-// app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapGet("/", () => "Server is running");
 
 app.Run();
