@@ -7,7 +7,7 @@ using System.Net;
 var builder = WebApplication.CreateBuilder(args);
 
 // Set Kestrel to listen on all network interfaces on port 8080
-builder.WebHost.UseUrls("http://0.0.0.0:8080");
+builder.WebHost.UseUrls("http://0.0.0.0:8523");
 
 // Add services to the container.
 builder.Services.AddDbContext<SpendoContext>(options =>
