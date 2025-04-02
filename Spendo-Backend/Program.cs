@@ -8,8 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-    serverOptions.Listen(IPAddress.Parse("0.0.0.0"), 8080); 
+    serverOptions.Listen(System.Net.IPAddress.Any, 8080);
 });
+
+
 // Add services to the container.
 builder.Services.AddDbContext<SpendoContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -35,7 +37,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.MapGet("/", () => "Hello World!");
 app.Run();
 
 app.UseCors(builder =>
