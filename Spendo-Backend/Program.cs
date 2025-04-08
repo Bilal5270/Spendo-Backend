@@ -13,8 +13,16 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
 
 
 // Add services to the container.
-builder.Services.AddDbContext<SpendoContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+try
+{
+    builder.Services.AddDbContext<SpendoContext>(options =>
+        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Error setting up database context: {ex.Message}");
+    throw;
+}
 builder.Services.AddControllers();
 builder.Services.AddScoped<ISpendoRepository, SpendoRepository>();
 builder.Services.AddScoped<IBudgetService, BudgetService>();
@@ -31,17 +39,17 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
-
-
-app.UseAuthorization();
-
-app.MapControllers();
-app.MapGet("/", () => "Hello World!");
-app.Run();
+//app.UseHttpsRedirection();
 
 app.UseCors(builder =>
     builder.AllowAnyOrigin()
            .AllowAnyMethod()
            .AllowAnyHeader()
 );
+app.UseAuthorization();
+
+app.MapControllers();
+app.MapGet("/", () => "Hello World!");
+app.Run();
+
+
