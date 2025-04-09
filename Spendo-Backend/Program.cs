@@ -38,17 +38,17 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
-
-
-app.UseAuthorization();
-
-app.MapControllers();
-app.MapGet("/", () => "Hello World!");
-app.Run();
+//app.UseHttpsRedirection();
 
 app.UseCors(builder =>
     builder.AllowAnyOrigin()
            .AllowAnyMethod()
            .AllowAnyHeader()
 );
+app.UseAuthorization();
+
+app.MapControllers();
+app.MapGet("/", () => "Hello World!");
+app.Run();
+
+
