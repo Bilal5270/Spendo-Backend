@@ -12,9 +12,16 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
 });
 
 
-// Add services to the container.
+var host = Environment.GetEnvironmentVariable("DB_HOST");
+var port = Environment.GetEnvironmentVariable("DB_PORT");
+var db = Environment.GetEnvironmentVariable("DB_NAME");
+var user = Environment.GetEnvironmentVariable("DB_USER");
+var pw = Environment.GetEnvironmentVariable("DB_PASSWORD");
+
+var connectionString = $"Host={host};Port={port};Database={db};Username={user};Password={pw}";
+
 builder.Services.AddDbContext<SpendoContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(connectionString));
 builder.Services.AddControllers();
 builder.Services.AddScoped<ISpendoRepository, SpendoRepository>();
 builder.Services.AddScoped<IBudgetService, BudgetService>();
