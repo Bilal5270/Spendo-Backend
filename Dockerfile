@@ -1,23 +1,28 @@
 # Gebruik een officiële .NET 9 SDK image als basis
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 
-# Stel de werkdirectory in
-WORKDIR /app
+# Stel de werkdirectory in voor de source
+WORKDIR /src
 
-# Kopieer het project bestand en herstel afhankelijkheden
-COPY Spendo-Backend/*.csproj ./
+# Kopieer volledige backend-map
+COPY Spendo-Backend/ ./Spendo-Backend/
+
+# Ga naar de projectmap
+WORKDIR /src/Spendo-Backend
+
+# Herstel dependencies
 RUN dotnet restore
 
-# Kopieer de resterende bestanden en bouw de applicatie
-COPY Spendo-Backend/. ./
+# Publiceer de app
 RUN dotnet publish -c Release -o /app/publish
 
-# Stel de image in voor het draaien van de app
+# Gebruik een lichtere runtime image voor productie
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 WORKDIR /app
 COPY --from=build /app/publish .
 
+# Stel poort in waarop de app luistert
 EXPOSE 8080
 
-# Stel de omgeving in voor het draaien van de applicatie
+# Start de app
 ENTRYPOINT ["dotnet", "Spendo-Backend.dll"]
