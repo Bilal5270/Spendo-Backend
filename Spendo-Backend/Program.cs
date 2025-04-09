@@ -14,11 +14,20 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
 });
 
 
+DotNetEnv.Env.Load();
+
 var host = Environment.GetEnvironmentVariable("DB_HOST");
 var internalPort = Environment.GetEnvironmentVariable("DB_PORT");
 var db = Environment.GetEnvironmentVariable("DB_NAME");
 var user = Environment.GetEnvironmentVariable("DB_USER");
 var pw = Environment.GetEnvironmentVariable("DB_PASSWORD");
+
+// Log the loaded values to confirm they are correct
+Console.WriteLine($"DB_HOST: {host}");
+Console.WriteLine($"DB_PORT: {internalPort}");
+Console.WriteLine($"DB_NAME: {db}");
+Console.WriteLine($"DB_USER: {user}");
+// Be cautious with logging sensitive info like passwords in production!
 
 var connectionString = $"Host={host};Port={internalPort};Database={db};Username={user};Password={pw}";
 
