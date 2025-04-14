@@ -21,7 +21,7 @@ namespace Spendo_Backend.Controllers
         public async Task<ActionResult<decimal>> GetTotalBudget(int categoryId)
         {
             var totalBudget = await _service.GetTotalBudget(categoryId);
-            return Ok(totalBudget);
+            return Ok(totalBudget.Amount);
         }
 
         // ✅ GET: api/budgets/remaining/{categoryId}
