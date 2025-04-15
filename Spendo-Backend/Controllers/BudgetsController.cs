@@ -32,5 +32,17 @@ namespace Spendo_Backend.Controllers
 
             return Ok(remainingBudget);
         }
+
+        // ✅ POST: api/budgets
+        [HttpPost]
+        public async Task<ActionResult<Budget>> CreateBudget([FromBody] Budget budget)
+        {
+            if (budget == null)
+            {
+                return BadRequest("Budget cannot be null");
+            }
+            var createdBudget = await _service.CreateBudget(budget);
+            return CreatedAtAction(nameof(GetTotalBudget), new { categoryId = createdBudget.CategoryId }, createdBudget);
+        }
     }
 }
