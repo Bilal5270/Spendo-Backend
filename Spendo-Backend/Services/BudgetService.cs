@@ -21,6 +21,22 @@ namespace Spendo_Backend.Services
             return generalBudget;
         }
 
+        public async Task<Budget> CreateBudget(Budget budget)
+        {
+            var existingBudget = await _spendoRepository.GetTotalBudgetMonth(6);
+            if (existingBudget != null)
+            {
+                throw new Exception("Er bestaat al een budget voor deze maand");
+            }
+            var budgetMonth = new Budget
+            {
+                CategoryId = 6,
+                Amount = budget.Amount,
+                Year = DateTime.Now.Year,
+                Month = DateTime.Now.Month
+            };
+            return await _spendoRepository.CreateBudget(budget);
+        }
         public async Task<decimal> GetRemainingBudget(int categoryId)
         {
             var generalBudget = await _spendoRepository.GetTotalBudgetMonth(categoryId);
