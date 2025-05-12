@@ -17,6 +17,13 @@ namespace Spendo_Backend.Repositories
                 .Where(b => b.CategoryId == categoryId && b.Year == DateTime.Now.Year && b.Month == DateTime.Now.Month)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<Budget> CreateBudget(Budget budget)
+        {
+            await _context.Budgets.AddAsync(budget);
+            await _context.SaveChangesAsync();
+            return budget;
+        }
         public async Task<decimal> GetTotalTransactionsDecimalMonth()
         {
             var now = DateTime.Now;
