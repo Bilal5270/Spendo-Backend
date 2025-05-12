@@ -82,5 +82,54 @@ namespace Spendo_Tests
             var exception = await Assert.ThrowsAsync<Exception>(() => _budgetService.GetRemainingBudget(categoryId));
             Assert.Equal("Budget voor deze categorie niet gevonden.", exception.Message);
         }
+        [Fact]
+        public async Task CreateBudget_ShouldUpdateExistingBudget_WhenItExists()
+        {
+            // Arrange
+            var inputBudget = new Budget { Amount = 500 };
+            var existingBudget = new Budget { CategoryId = 6, Amount = 100 };
+
+            _mockRepository.Setup(r => r.GetTotalBudgetMonth(6))
+                           .ReturnsAsync(existingBudget);
+            _mockRepository.Setup(r => r.SaveChanges())
+                           .Returns(Task.CompletedTask);
+            _mockRepository.Setup(r => r.CreateBudget(It.IsAny<Budget>()))
+                           .ReturnsAsync((Budget b) => b);
+
+            // Act
+            var result = await _budgetService.CreateBudget(inputBudget);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(500, result.Amount);
+            _mockRepository.Verify(r => r.SaveChanges(), Times.Once);
+        }
+
+        [Fact]
+        public async Task CreateBudget_ShouldCreateNewBudget_WhenNoneExists()
+        {
+            // Arrange
+            var inputBudget = new Budget { Amount = 800 };
+            Budget capturedBudget = null;
+
+            _mockRepository.Setup(r => r.GetTotalBudgetMonth(6))
+                           .ReturnsAsync((Budget)null);
+
+            _mockRepository.Setup(r => r.CreateBudget(It.IsAny<Budget>()))
+                           .Callback<Budget>(b => capturedBudget = b)
+                           .ReturnsAsync((Budget b) => b);
+
+            // Act
+            var result = await _budgetService.CreateBudget(inputBudget);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(800, result.Amount);
+            Assert.Equal(6, result.CategoryId);
+            Assert.Equal(DateTime.Now.Year, result.Year);
+            Assert.Equal(DateTime.Now.Month, result.Month);
+            Assert.Equal(result, capturedBudget); // ensures the correct object was saved
+            _mockRepository.Verify(r => r.SaveChanges(), Times.Never);
+        }
     }
 }
