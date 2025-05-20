@@ -12,7 +12,7 @@ namespace Spendo_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController] // ✅ Markeert deze controller als een API-controller
-    public class TransactionsController : Controller
+    public class TransactionsController : ControllerBase
     {
         private readonly ITransactionService _transactionService;
 
