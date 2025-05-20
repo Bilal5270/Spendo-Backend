@@ -36,6 +36,7 @@ builder.Services.AddDbContext<SpendoContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddScoped<ISpendoRepository, SpendoRepository>();
 builder.Services.AddScoped<IBudgetService, BudgetService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddCors();
