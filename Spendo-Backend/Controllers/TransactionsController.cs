@@ -22,7 +22,7 @@ namespace Spendo_Backend.Controllers
         }
 
 
-        [HttpGet("")]
+        [HttpGet]
         public async Task<ActionResult<List<Transaction>>> GetAllTransactions()
         {
             var transactions = await _transactionService.GetAllTransactions();
