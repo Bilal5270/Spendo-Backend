@@ -36,6 +36,21 @@ namespace Spendo_Backend.Repositories
                     && t.TransactionDate < firstDayNextMonth)
                 .SumAsync(t => t.Amount);
         }
+
+        public async Task<List<Transaction>> GetAllTransactionsAsync()
+        {
+            return await _context.Transactions
+                .Include(t => t.Category) // optioneel, als je categoriegegevens mee wil laden
+                .ToListAsync();
+        }
+
+        public async Task<Transaction> CreateTransaction(Transaction transaction)
+        {
+            await _context.Transactions.AddAsync(transaction);
+            await _context.SaveChangesAsync();
+            return transaction;
+        }
+
         public async Task SaveChanges()
         {
             await _context.SaveChangesAsync();
