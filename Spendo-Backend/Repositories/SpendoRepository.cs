@@ -40,7 +40,7 @@ namespace Spendo_Backend.Repositories
         public async Task<List<Transaction>> GetAllTransactionsAsync()
         {
             return await _context.Transactions
-                .Include(t => t.Category) // optioneel, als je categoriegegevens mee wil laden
+                //.Include(t => t.Category) // optioneel, als je categoriegegevens mee wil laden
                 .ToListAsync();
         }
 
