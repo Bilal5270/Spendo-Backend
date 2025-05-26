@@ -46,8 +46,14 @@ namespace Spendo_Backend.Repositories
 
         public async Task<Transaction> CreateTransaction(Transaction transaction)
         {
+            if (transaction.TransactionDate.HasValue)
+            {
+                transaction.TransactionDate = DateTime.SpecifyKind(transaction.TransactionDate.Value, DateTimeKind.Unspecified);
+            }
+
             await _context.Transactions.AddAsync(transaction);
             await _context.SaveChangesAsync();
+
             return transaction;
         }
 
