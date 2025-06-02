@@ -6,6 +6,7 @@ namespace Spendo_Backend.Repositories
     {
         public Task<Budget> CreateBudget(Budget budget);
         public Task<Transaction> CreateTransaction(Transaction transaction);
+        public Task<List<RecurringTransaction>> GetAllRecurringTransactionsAsync();
         public Task<List<Transaction>> GetAllTransactionsAsync();
         public Task<Budget> GetTotalBudgetMonth(int categoryId);
         public Task<Decimal> GetTotalTransactionsDecimalMonth();
