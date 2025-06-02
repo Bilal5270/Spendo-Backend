@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace Spendo_Backend.Models;
 
-public partial class Transaction
+public partial class RecurringTransaction
 {
-    public int TransactionId { get; set; }
+    public int RecurringId { get; set; }
 
     public int? UserId { get; set; }
 
@@ -15,11 +15,17 @@ public partial class Transaction
 
     public decimal Amount { get; set; }
 
-    public DateTime? TransactionDate { get; set; }
-
     public string Description { get; set; }
 
     public string Type { get; set; }
+
+    public DateOnly StartDate { get; set; }
+
+    public DateOnly? EndDate { get; set; }
+
+    public string RecurrenceInterval { get; set; }
+
+    public DateOnly? LastGeneratedDate { get; set; }
 
     public virtual Category Category { get; set; }
 

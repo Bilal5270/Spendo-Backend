@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Spendo_Backend.Models;
+using Spendo_Backend.Models.DTO;
 
 namespace Spendo_Backend.Repositories
 {
@@ -43,6 +44,15 @@ namespace Spendo_Backend.Repositories
                 //.Include(t => t.Category) // optioneel, als je categoriegegevens mee wil laden
                 .ToListAsync();
         }
+        public async Task<List<RecurringTransaction>> GetAllRecurringTransactionsAsync()
+        {
+            return await _context.RecurringTransactions
+                .Include(rt => rt.Category)
+                .ToListAsync();
+        }
+
+
+
 
         public async Task<Transaction> CreateTransaction(Transaction transaction)
         {

@@ -71,6 +71,84 @@ namespace Spendo_Tests
             Assert.Equal(25, result.Amount);
             _mockRepo.Verify(r => r.CreateTransaction(It.IsAny<Transaction>()), Times.Once);
         }
-    
-}
+        [Fact]
+        public async Task GetAllConvertedRecurringTransactionsAsync_ReturnsCorrectConvertedAmounts()
+        {
+            // Arrange
+            var recurringTransactions = new List<RecurringTransaction>
+    {
+        new RecurringTransaction
+        {
+            RecurringId = 1,
+            Amount = 100,
+            Description = "Salaris",
+            Type = "income",
+            RecurrenceInterval = "monthly",
+            Category = new Category { Name = "Werk" }
+        },
+        new RecurringTransaction
+        {
+            RecurringId = 2,
+            Amount = 52,
+            Description = "Netflix",
+            Type = "expense",
+            RecurrenceInterval = "yearly",
+            Category = new Category { Name = "Entertainment" }
+        }
+    };
+
+            _mockRepo.Setup(r => r.GetAllRecurringTransactionsAsync())
+                     .ReturnsAsync(recurringTransactions);
+
+            // Act
+            var result = await _transactionService.GetAllConvertedRecurringTransactionsAsync();
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(2, result.Count);
+
+            var salaris = result.First(r => r.Description == "Salaris");
+            Assert.Equal(100, salaris.OriginalAmount);
+            Assert.Equal(100, salaris.MonthlyAmount);
+            Assert.InRange(salaris.WeeklyAmount, 23.09m, 23.11m); // 100 / 4.33
+            Assert.Equal(1200, salaris.YearlyAmount); // 100 * 12
+
+            var netflix = result.First(r => r.Description == "Netflix");
+            Assert.Equal(52, netflix.OriginalAmount);
+            Assert.InRange(netflix.WeeklyAmount, 1.00m, 1.01m); // 52 / 52
+            Assert.InRange(netflix.MonthlyAmount, 4.33m, 4.34m); // 52 / 12
+            Assert.Equal(52, netflix.YearlyAmount);
+        }
+
+        [Fact]
+        public async Task GetAllConvertedRecurringTransactionsAsync_HandlesUnknownInterval()
+        {
+            // Arrange
+            var recurringTransactions = new List<RecurringTransaction>
+    {
+        new RecurringTransaction
+        {
+            RecurringId = 3,
+            Amount = 100,
+            Description = "Onbekend",
+            Type = "income",
+            RecurrenceInterval = "unknown",
+            Category = null
+        }
+    };
+
+            _mockRepo.Setup(r => r.GetAllRecurringTransactionsAsync())
+                     .ReturnsAsync(recurringTransactions);
+
+            // Act
+            var result = await _transactionService.GetAllConvertedRecurringTransactionsAsync();
+
+            // Assert
+            var item = result.First();
+            Assert.Equal(100, item.WeeklyAmount);
+            Assert.Equal(100, item.MonthlyAmount);
+            Assert.Equal(100, item.YearlyAmount);
+        }
+
+    }
 }

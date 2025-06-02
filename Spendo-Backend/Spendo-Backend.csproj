@@ -32,8 +32,4 @@
     <PackageReference Include="xunit.core" Version="2.9.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
 </Project>
