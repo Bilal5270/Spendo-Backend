@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Spendo_Backend.Models;
+using Spendo_Backend.Models.DTO;
 using Spendo_Backend.Services;
 
 namespace Spendo_Backend.Controllers
@@ -29,6 +30,12 @@ namespace Spendo_Backend.Controllers
             return Ok(transactions);
         }
 
+        [HttpGet("recurring")]
+        public async Task<ActionResult<List<RecurringTransactionDTO>>> GetAllRecurringTransactions()
+        {
+            var transactions = await _transactionService.GetAllConvertedRecurringTransactionsAsync();
+            return Ok(transactions);
+        }
         [HttpPost("")]
         public async Task<ActionResult<Transaction>> CreateTransaction([FromBody] Transaction transaction)
         {
@@ -39,6 +46,8 @@ namespace Spendo_Backend.Controllers
             var createdTransaction = await _transactionService.CreateTransaction(transaction);
             return CreatedAtAction(nameof(GetAllTransactions), new { id = createdTransaction.TransactionId }, createdTransaction);
         }
+
+
 
     }
 }
