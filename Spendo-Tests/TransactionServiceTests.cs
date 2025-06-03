@@ -149,6 +149,70 @@ namespace Spendo_Tests
             Assert.Equal(100, item.MonthlyAmount);
             Assert.Equal(100, item.YearlyAmount);
         }
+        [Fact]
+        public async Task CreateRecurringTransactionAsync_ThrowsException_WhenAmountIsZeroOrLess()
+        {
+            // Arrange
+            var invalidTransaction = new RecurringTransaction
+            {
+                Amount = 0,
+                Description = "Test",
+                RecurrenceInterval = "monthly"
+            };
 
+            // Act & Assert
+            var ex = await Assert.ThrowsAsync<ArgumentException>(() =>
+                _transactionService.CreateRecurringTransactionAsync(invalidTransaction));
+
+            Assert.Equal("Bedrag moet groter dan 0 zijn.", ex.Message);
+        }
+
+        [Fact]
+        public async Task CreateRecurringTransactionAsync_SetsDefaultRecurrenceInterval_WhenEmpty()
+        {
+            // Arrange
+            var recurringTransaction = new RecurringTransaction
+            {
+                Amount = 100,
+                Description = "Test zonder interval",
+                RecurrenceInterval = null
+            };
+
+            _mockRepo.Setup(r => r.CreateRecurringTransaction(It.IsAny<RecurringTransaction>()))
+                     .ReturnsAsync((RecurringTransaction rt) => rt);
+
+            // Act
+            var result = await _transactionService.CreateRecurringTransactionAsync(recurringTransaction);
+
+            // Assert
+            Assert.Equal("monthly", result.RecurrenceInterval);
+            Assert.Equal(100, result.Amount);
+            _mockRepo.Verify(r => r.CreateRecurringTransaction(It.IsAny<RecurringTransaction>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task CreateRecurringTransactionAsync_CallsRepository_AndReturnsCreatedTransaction()
+        {
+            // Arrange
+            var recurringTransaction = new RecurringTransaction
+            {
+                Amount = 150,
+                Description = "Maandelijkse test",
+                RecurrenceInterval = "yearly"
+            };
+
+            _mockRepo.Setup(r => r.CreateRecurringTransaction(It.IsAny<RecurringTransaction>()))
+                     .ReturnsAsync((RecurringTransaction rt) => rt);
+
+            // Act
+            var result = await _transactionService.CreateRecurringTransactionAsync(recurringTransaction);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(150, result.Amount);
+            Assert.Equal("yearly", result.RecurrenceInterval);
+            _mockRepo.Verify(r => r.CreateRecurringTransaction(It.IsAny<RecurringTransaction>()), Times.Once);
+        }
     }
 }
+

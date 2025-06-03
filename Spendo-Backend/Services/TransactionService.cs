@@ -1,4 +1,5 @@
-﻿using Spendo_Backend.Models;
+﻿using NuGet.Protocol.Core.Types;
+using Spendo_Backend.Models;
 using Spendo_Backend.Models.DTO;
 using Spendo_Backend.Repositories;
 
@@ -34,7 +35,20 @@ namespace Spendo_Backend.Services
                 return null; 
             }
         }
+        public async Task<RecurringTransaction> CreateRecurringTransactionAsync(RecurringTransaction recurringTransaction)
+        {
+            if (recurringTransaction.Amount <= 0)
+            {
+                throw new ArgumentException("Bedrag moet groter dan 0 zijn.");
+            }
 
+            if (string.IsNullOrEmpty(recurringTransaction.RecurrenceInterval))
+            {
+                recurringTransaction.RecurrenceInterval = "monthly";
+            }
+
+            return await _spendoRepository.CreateRecurringTransaction(recurringTransaction);
+        }
         public async Task<List<RecurringTransactionDTO>> GetAllConvertedRecurringTransactionsAsync()
         {
             var transactions = await _spendoRepository.GetAllRecurringTransactionsAsync();
