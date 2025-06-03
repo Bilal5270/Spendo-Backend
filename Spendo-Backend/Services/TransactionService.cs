@@ -1,5 +1,4 @@
-﻿using NuGet.Protocol.Core.Types;
-using Spendo_Backend.Models;
+﻿using Spendo_Backend.Models;
 using Spendo_Backend.Models.DTO;
 using Spendo_Backend.Repositories;
 
@@ -8,6 +7,7 @@ namespace Spendo_Backend.Services
     public class TransactionService : ITransactionService
     {
         private readonly ISpendoRepository _spendoRepository;
+
         public TransactionService(ISpendoRepository spendoRepository)
         {
             _spendoRepository = spendoRepository;
@@ -18,12 +18,44 @@ namespace Spendo_Backend.Services
             return await _spendoRepository.GetAllTransactionsAsync();
         }
 
-        public async Task<Transaction> CreateTransaction(Transaction transaction)
+        public async Task<Transaction?> CreateTransaction(Transaction transaction)
         {
-            var totalExpenses = await _spendoRepository.GetTotalTransactionsDecimalMonth();
-         
-            return await _spendoRepository.CreateTransaction(transaction);
+            if (transaction == null)
+                return null; 
+
+            try
+            {
+              
+                return await _spendoRepository.CreateTransaction(transaction);
+            }
+            catch (Exception ex)
+            {
+          
+                return null; 
+            }
         }
+
+        public async Task<List<RecurringTransactionDTO>> GetAllConvertedRecurringTransactionsAsync()
+        {
+            var transactions = await _spendoRepository.GetAllRecurringTransactionsAsync();
+
+            if (transactions == null || !transactions.Any())
+                return new List<RecurringTransactionDTO>();
+
+            return transactions.Select(rt => new RecurringTransactionDTO
+            {
+                RecurringId = rt.RecurringId,
+                CategoryName = rt.Category?.Name,
+                Description = rt.Description,
+                Type = rt.Type,
+                OriginalAmount = rt.Amount,
+                RecurrenceInterval = rt.RecurrenceInterval,
+                WeeklyAmount = ConvertToWeekly(rt.Amount, rt.RecurrenceInterval),
+                MonthlyAmount = ConvertToMonthly(rt.Amount, rt.RecurrenceInterval),
+                YearlyAmount = ConvertToYearly(rt.Amount, rt.RecurrenceInterval)
+            }).ToList();
+        }
+
         private decimal ConvertToWeekly(decimal amount, string interval)
         {
             return interval.ToLower() switch
@@ -56,25 +88,5 @@ namespace Spendo_Backend.Services
                 _ => amount
             };
         }
-
-
-        public async Task<List<RecurringTransactionDTO>> GetAllConvertedRecurringTransactionsAsync()
-        {
-            var transactions = await _spendoRepository.GetAllRecurringTransactionsAsync();
-
-            return transactions.Select(rt => new RecurringTransactionDTO
-            {
-                RecurringId = rt.RecurringId,
-                CategoryName = rt.Category?.Name,
-                Description = rt.Description,
-                Type = rt.Type,
-                OriginalAmount = rt.Amount,
-                RecurrenceInterval = rt.RecurrenceInterval,
-                WeeklyAmount = ConvertToWeekly(rt.Amount, rt.RecurrenceInterval),
-                MonthlyAmount = ConvertToMonthly(rt.Amount, rt.RecurrenceInterval),
-                YearlyAmount = ConvertToYearly(rt.Amount, rt.RecurrenceInterval)
-            }).ToList();
-        }
-
     }
 }

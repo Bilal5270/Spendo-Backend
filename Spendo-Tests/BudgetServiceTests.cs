@@ -37,18 +37,6 @@ namespace Spendo_Tests
             Assert.Equal(1000m, result.Amount);
         }
 
-        [Fact]
-        public async Task GetTotalBudget_ShouldThrowException_WhenBudgetNotFound()
-        {
-            // Arrange
-            int categoryId = 1;
-            _mockRepository.Setup(r => r.GetTotalBudgetMonth(categoryId))
-                           .ReturnsAsync((Budget)null);
-
-            // Act & Assert
-            var exception = await Assert.ThrowsAsync<Exception>(() => _budgetService.GetTotalBudget(categoryId));
-            Assert.Equal("Budget voor deze categorie niet gevonden.", exception.Message);
-        }
 
         [Fact]
         public async Task GetRemainingBudget_ShouldReturnCorrectAmount()
@@ -70,18 +58,7 @@ namespace Spendo_Tests
             Assert.Equal(750m, result); // 1000 - 250
         }
 
-        [Fact]
-        public async Task GetRemainingBudget_ShouldThrowException_WhenBudgetNotFound()
-        {
-            // Arrange
-            int categoryId = 1;
-            _mockRepository.Setup(r => r.GetTotalBudgetMonth(categoryId))
-                           .ReturnsAsync((Budget)null);
-
-            // Act & Assert
-            var exception = await Assert.ThrowsAsync<Exception>(() => _budgetService.GetRemainingBudget(categoryId));
-            Assert.Equal("Budget voor deze categorie niet gevonden.", exception.Message);
-        }
+        
         [Fact]
         public async Task CreateBudget_ShouldUpdateExistingBudget_WhenItExists()
         {

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using Spendo_Backend.Models;
 using Spendo_Backend.Models.DTO;
 using Spendo_Backend.Services;
@@ -12,7 +6,7 @@ using Spendo_Backend.Services;
 namespace Spendo_Backend.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController] // ✅ Markeert deze controller als een API-controller
+    [ApiController]
     public class TransactionsController : ControllerBase
     {
         private readonly ITransactionService _transactionService;
@@ -21,7 +15,6 @@ namespace Spendo_Backend.Controllers
         {
             _transactionService = transactionService;
         }
-
 
         [HttpGet]
         public async Task<ActionResult<List<Transaction>>> GetAllTransactions()
@@ -36,18 +29,23 @@ namespace Spendo_Backend.Controllers
             var transactions = await _transactionService.GetAllConvertedRecurringTransactionsAsync();
             return Ok(transactions);
         }
+
         [HttpPost("")]
         public async Task<ActionResult<Transaction>> CreateTransaction([FromBody] Transaction transaction)
         {
             if (transaction == null)
             {
-                return BadRequest("Transaction cannot be null");
+                return BadRequest("Transactie mag niet null zijn.");
             }
+
             var createdTransaction = await _transactionService.CreateTransaction(transaction);
+
+            if (createdTransaction == null)
+            {
+                return StatusCode(500, "Transactie kon niet worden aangemaakt.");
+            }
+
             return CreatedAtAction(nameof(GetAllTransactions), new { id = createdTransaction.TransactionId }, createdTransaction);
         }
-
-
-
     }
 }
