@@ -25,6 +25,12 @@ namespace Spendo_Backend.Repositories
             await _context.SaveChangesAsync();
             return budget;
         }
+        public async Task<RecurringTransaction> CreateRecurringTransaction(RecurringTransaction recurringTransaction)
+        {
+            await _context.RecurringTransactions.AddAsync(recurringTransaction);
+            await _context.SaveChangesAsync();
+            return recurringTransaction;
+        }
         public async Task<decimal> GetTotalTransactionsDecimalMonth()
         {
             var now = DateTime.Now;

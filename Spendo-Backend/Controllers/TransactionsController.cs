@@ -47,5 +47,23 @@ namespace Spendo_Backend.Controllers
 
             return CreatedAtAction(nameof(GetAllTransactions), new { id = createdTransaction.TransactionId }, createdTransaction);
         }
+
+        [HttpPost("recurring")]
+        public async Task<ActionResult<RecurringTransaction>> CreateRecurringTransaction([FromBody] RecurringTransaction recurringTransaction)
+        {
+            if (recurringTransaction == null)
+            {
+                return BadRequest("Recurring transactie mag niet null zijn.");
+            }
+
+            var created = await _transactionService.CreateRecurringTransactionAsync(recurringTransaction);
+
+            if (created == null)
+            {
+                return StatusCode(500, "Recurring transactie kon niet worden aangemaakt.");
+            }
+
+            return CreatedAtAction(nameof(GetAllRecurringTransactions), new { id = created.RecurringId }, created);
+        }
     }
 }

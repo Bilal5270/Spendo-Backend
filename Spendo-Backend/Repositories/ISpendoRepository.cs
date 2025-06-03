@@ -5,6 +5,7 @@ namespace Spendo_Backend.Repositories
     public interface ISpendoRepository
     {
         public Task<Budget> CreateBudget(Budget budget);
+        public Task<RecurringTransaction> CreateRecurringTransaction(RecurringTransaction recurringTransaction);
         public Task<Transaction> CreateTransaction(Transaction transaction);
         public Task<List<RecurringTransaction>> GetAllRecurringTransactionsAsync();
         public Task<List<Transaction>> GetAllTransactionsAsync();
