@@ -1,0 +1,270 @@
+{
+  "info": {
+    "_postman_id": "fecaf19b-a8f9-4483-aeaa-20062a1fd7df",
+    "name": "PSEMO SPENDO",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "18667418"
+  },
+  "item": [
+    {
+      "name": "GET REQUESTS",
+      "item": [
+        {
+          "name": "GET REMAINING BUDGET",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Statuscode is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response bevat een geldig bedrag\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData).to.be.a('number');\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Remaining budget kan negatief zijn (overspending)\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData).to.be.a('number'); // Check of het een nummer is\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://spendoapi.bilalyousef.nl/api/budgets/remaining/6\n",
+              "protocol": "https",
+              "host": [
+                "spendoapi",
+                "bilalyousef",
+                "nl"
+              ],
+              "path": [
+                "api",
+                "budgets",
+                "remaining",
+                "6\n"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET TOTAL BUDGET",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Statuscode is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response is een geldig getal\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData).to.be.a('number');\r",
+                  "    pm.expect(jsonData).to.be.above(0); // Budget moet positief zijn\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://spendoapi.bilalyousef.nl/api/budgets/total/6",
+              "protocol": "https",
+              "host": [
+                "spendoapi",
+                "bilalyousef",
+                "nl"
+              ],
+              "path": [
+                "api",
+                "budgets",
+                "total",
+                "6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET ALL TRANSACTIONS",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://spendoapi.bilalyousef.nl/api/transactions",
+              "protocol": "https",
+              "host": [
+                "spendoapi",
+                "bilalyousef",
+                "nl"
+              ],
+              "path": [
+                "api",
+                "transactions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET ALL TRANSACTIONS RECURRING",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://spendoapi.bilalyousef.nl/api/transactions/recurring",
+              "protocol": "https",
+              "host": [
+                "spendoapi",
+                "bilalyousef",
+                "nl"
+              ],
+              "path": [
+                "api",
+                "transactions",
+                "recurring"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "POST REQUESTS",
+      "item": [
+        {
+          "name": "POST TRANSACTION",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "https://spendoapi.bilalyousef.nl/api/transactions/",
+              "protocol": "https",
+              "host": [
+                "spendoapi",
+                "bilalyousef",
+                "nl"
+              ],
+              "path": [
+                "api",
+                "transactions",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST TRANSACTION RECURRING",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "https://spendoapi.bilalyousef.nl/api/transactions/recurring",
+              "protocol": "https",
+              "host": [
+                "spendoapi",
+                "bilalyousef",
+                "nl"
+              ],
+              "path": [
+                "api",
+                "transactions",
+                "recurring"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST BUDGET",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Statuscode is 201 Created\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response bevat een geldig budgetobject\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"amount\").that.is.a(\"number\");\r",
+                  "    pm.expect(json).to.have.property(\"categoryId\", 6); // hardcoded in de service\r",
+                  "    pm.expect(json).to.have.property(\"month\").that.is.a(\"number\");\r",
+                  "    pm.expect(json).to.have.property(\"year\").that.is.a(\"number\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Maand en jaar zijn actueel\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    const now = new Date();\r",
+                  "    pm.expect(json.month).to.eql(now.getMonth() + 1); // let op: JS maanden starten bij 0\r",
+                  "    pm.expect(json.year).to.eql(now.getFullYear());\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"amount\": 1500\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://spendoapi.bilalyousef.nl/api/budgets/",
+              "protocol": "https",
+              "host": [
+                "spendoapi",
+                "bilalyousef",
+                "nl"
+              ],
+              "path": [
+                "api",
+                "budgets",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
